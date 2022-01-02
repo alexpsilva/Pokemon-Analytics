@@ -1,3 +1,6 @@
+from src.types.responses.replay import Replay, ReplayResponse
+from src.types.responses.ladder import LadderResponse
+from src.types.battle_log import BattleLog
 from src.parser import parse_list
 from typing import Dict, List, Optional, Union
 from datetime import datetime
@@ -5,7 +8,7 @@ import requests
 
 from requests.api import request
 
-from src.types.battle_formats import BATTLE_FORMATS
+from src.types.enums.battle_formats import BATTLE_FORMATS
 from .exceptions.api import *
 
 class ShowdownAPI:
@@ -21,7 +24,7 @@ class ShowdownAPI:
   def __init__(self):
     pass
 
-  def _build_url(self, host, path) -> str:
+  def _build_url(self, host: str, path: str) -> str:
     return f'{self.PROTOCOL}://{host}/{path}'
 
   @staticmethod
@@ -41,15 +44,25 @@ class ShowdownAPI:
     if type(date) is not str:
       raise InvalidStatDate
     return date
+
+  def ladder(self, _format: BATTLE_FORMATS) -> LadderResponse:
+    if _format is None:
+      raise InvalidBattleFormat
+    
+    format = self._validate_battle_format(_format)
+    url = self._build_url(self.HOSTS['MAIN'], f'ladder/{format}.json')
+    return requests.get(url).json()
   
-  def replay(self, replay_id: str):
+  def replay(self, replay_id: str) -> Replay:
     if type(replay_id) is not str:
       raise InvalidReplayID
     
     url = self._build_url(self.HOSTS['REPLAYS'], f'{replay_id}.json')
-    return requests.get(url).json()
+    response = requests.get(url).json()
+    response['log'] = BattleLog(response['log'])
+    return response
 
-  def recent_replays(self, username: Optional[str]=None, format: Optional[BATTLE_FORMATS]=None):
+  def recent_replays(self, username: Optional[str]=None, format: Optional[BATTLE_FORMATS]=None) -> ReplayResponse:
     params: Dict[str, str] = {}
     if format is not None:
       params['format'] = self._validate_battle_format(format)
