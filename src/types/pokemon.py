@@ -1,31 +1,22 @@
-from typing import List
-
-
-class Move():
-  name: str
-  max_pp: int
-  current_pp: int
-
-  def __init__(self, name):
-    self.name = name
-  
-  def __repr__(self):
-    return f'{self.name} ({self.current_pp}/{self.max_pp}'
+from src.types.move import Move
+from typing import List, Optional
 
 class Pokemon():
-  name: str
-  ability: str
-  moves: List[Move]
-
-  def __init__(self, name):
+  def __init__(self, name: str):
     self.name = name
+    self.ability: Optional[str] = None
+    self.moves: List[Move] = []
   
   def __repr__(self):
     moves_str = '\n'.join([f' - {move}' for move in self.moves])
-    return f'{self.name}:\n{moves_str}'
+    return f'{self.name} ({self.ability}):\n{moves_str}'
+  
+  def __eq__(self, other):
+    return self.name == other.name
   
   def set_ability(self, ability: str):
     self.ability = ability
 
   def add_move(self, move: str):
-    self.moves.append(Move(move))
+    if len([i for i in self.moves if i.name == move]) == 0:
+      self.moves.append(Move(move))

@@ -1,12 +1,11 @@
+from src.types.responses.moves import MovesResponse
 from src.types.responses.replay import Replay, ReplayResponse
 from src.types.responses.ladder import LadderResponse
 from src.types.battle_log import BattleLog
 from src.parser import parse_list
-from typing import Dict, List, Optional, Union
+from typing import Dict, Optional, Union
 from datetime import datetime
 import requests
-
-from requests.api import request
 
 from src.types.enums.battle_formats import BATTLE_FORMATS
 from .exceptions.api import *
@@ -45,6 +44,10 @@ class ShowdownAPI:
       raise InvalidStatDate
     return date
 
+  def moves(self) -> MovesResponse:
+    url = self._build_url(self.HOSTS['POKEDEX'], 'data/moves.json')
+    return requests.get(url).json()
+
   def ladder(self, _format: BATTLE_FORMATS) -> LadderResponse:
     if _format is None:
       raise InvalidBattleFormat
@@ -59,6 +62,7 @@ class ShowdownAPI:
     
     url = self._build_url(self.HOSTS['REPLAYS'], f'{replay_id}.json')
     response = requests.get(url).json()
+    print(response['log'])
     response['log'] = BattleLog(response['log'])
     return response
 

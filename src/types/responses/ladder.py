@@ -1,4 +1,3 @@
-from src.types.enums.battle_formats import BATTLE_FORMATS
 from typing import TypedDict, List
 
 class LadderEntry(TypedDict):
