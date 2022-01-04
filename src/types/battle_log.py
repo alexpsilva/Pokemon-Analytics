@@ -34,12 +34,14 @@ class BattleLog():
       if len(line) == 1:
         if line[0] == 'clearpoke':
           self.current_section = BATTLE_LOG_SECTIONS.TEAM_PREVIEW
+          Logger().info(f'Starting {self.current_section.value} section')
         elif line[0] == 'start':
           self.current_section = BATTLE_LOG_SECTIONS.BATTLE
+          Logger().info(f'Starting {self.current_section.value} section')
       elif len(line) == 2:
         if line[0] == 'win':
           self.current_section = BATTLE_LOG_SECTIONS.POSBATTLE
-      Logger().info(f'Starting {self.current_section} section')
+          Logger().info(f'Starting {self.current_section.value} section')
 
     def parse_game_preview_line(line: List[str]) -> None:
       if len(line) == 1:
@@ -107,6 +109,11 @@ class BattleLog():
 
           pokemon.add_move(move)
           Logger().debug(f'Adding move {move} to {player}\'s {pokemon_name}')
+      
+      for index, message in enumerate(line):
+        if '[from] ability' in message:
+          pokemon_name = line[index + 1].replace('[of] ', '')
+          # (to-do)
             
 
     handler_by_section = {

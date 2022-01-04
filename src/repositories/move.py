@@ -1,3 +1,4 @@
+from src.utils.logger import Logger
 from typing import Dict, Optional
 from src.types.responses.moves import MoveResponseEntry
 from src.utils.singleton import Singleton
@@ -7,6 +8,7 @@ class MoveRepository(metaclass=Singleton):
   _data: Dict[str, MoveResponseEntry] = {}
 
   def __init__(self):
+    Logger().info(f'Initializing Move repository')
     response = src.showdown_api.ShowdownAPI().moves()
 
     for raw_move in response.values():
