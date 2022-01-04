@@ -11,6 +11,7 @@ logger = Logger(LOGGER_LEVEL.INFO)
 ladder = api.ladder(format)
 top_players = [i['userid'] for i in ladder['toplist']]
 
+output_filename = 'output_teams.txt'
 recent_teams = {}
 placing = 0
 while placing < 50:
@@ -41,9 +42,11 @@ while placing < 50:
         Logger().info(f'Merging two {used_pokemon} teams')
         other_team.merge(team)
 
-for player, teams in recent_teams.items():
-  Logger().info(f'---------- {player}\'s teams: -----------')
-  for i, team in enumerate(teams.values()):
-    Logger().info(f'\n{team}\n')
-    if i < len(teams) - 1:
-      Logger().info('-------------------')
+with open(output_filename, 'w') as file:
+  Logger().info(f'Outputing teams into {output_filename}')
+  for player, teams in recent_teams.items():
+    file.write(f'\n---------- {player}\'s teams: -----------\n')
+    for i, team in enumerate(teams.values()):
+      file.write(f'\n{team}\n')
+      if i < len(teams) - 1:
+        file.write('-------------------')
