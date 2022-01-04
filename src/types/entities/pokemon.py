@@ -1,8 +1,8 @@
 from src.utils.logger import Logger
-from src.repositories.pokemon import PokemonRepository
-from src.exceptions.battle_log import InvalidPokemon
-from src.types.entities.move import Move
 from typing import List, Optional
+from src.exceptions.battle_log import InvalidPokemon
+from src.repositories.pokemon import PokemonRepository
+from src.types.entities.move import Move
 
 class Pokemon():
   def __init__(self, name: str):

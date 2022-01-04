@@ -1,4 +1,4 @@
-from src.parsers.battle_log import parse_battle_log
+from src.parsers.battle_log import BattleLogParser
 from src.types.responses.pokemon import PokemonResponse
 from src.utils.logger import Logger
 from src.types.responses.moves import MovesResponse
@@ -74,7 +74,7 @@ class ShowdownAPI:
     replay_id = self._validate_replay_id(replay_id)
     url = self._build_url(self.HOSTS['REPLAYS'], f'{replay_id}.json')
     response = requests.get(url).json()
-    response['log'] = parse_battle_log(response['log'])
+    response['log'] = BattleLogParser().parse(response['log'])
     return response
 
   def recent_replays(self, username: Optional[str]=None, format: Optional[BATTLE_FORMATS]=None) -> ReplayResponse:

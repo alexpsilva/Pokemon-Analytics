@@ -34,5 +34,6 @@ class PokemonResponseEntry(TypedDict):
   evos: List[str]
   eggGroups: List[str]
   tier: Optional[TIERS]
+  cosmeticFormes: Optional[List[str]]
 
 PokemonResponse = Dict[str, PokemonResponseEntry]

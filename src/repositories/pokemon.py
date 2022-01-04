@@ -12,7 +12,7 @@ class PokemonRepository(metaclass=Singleton):
     response = src.showdown_api.ShowdownAPI().pokemon()
 
     for raw_pokemon in response.values():
-      self._data[raw_pokemon['name']] = {
+      pokemon_data: PokemonResponseEntry = {
         "num": raw_pokemon['num'],
         "name": raw_pokemon['name'],
         "types": raw_pokemon['types'],
@@ -32,7 +32,11 @@ class PokemonRepository(metaclass=Singleton):
         "evos": raw_pokemon.get('evos') or [],
         "eggGroups": raw_pokemon['eggGroups'],
         "tier": raw_pokemon.get('tier'),
+        "cosmeticFormes": raw_pokemon.get('cosmeticFormes') or []
       }
+      self._data[raw_pokemon['name']] = pokemon_data
+      for cosmetic_form in pokemon_data['cosmeticFormes']:
+        self._data[cosmetic_form] = pokemon_data
 
   def get_pokemon(self, name: str) -> Optional[PokemonResponseEntry]:
     return self._data.get(name)

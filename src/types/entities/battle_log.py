@@ -1,12 +1,10 @@
 from src.utils.logger import Logger
+from typing import Optional, TypedDict
+from src.exceptions.battle_log import InvalidPokemon
+from src.types.enums.tiers import TIERS
+from src.types.enums.game_types import GAME_TYPES
 from src.types.entities.team import Team
 from src.types.entities.pokemon import Pokemon
-from src.types.enums.tiers import TIERS
-from src.exceptions.battle_log import InvalidPokemon
-from src.types.enums.game_types import GAME_TYPES
-from src.types.enums.battle_log_sections import BATTLE_LOG_SECTIONS
-from typing import Dict, List, Optional, Set, TypedDict
-
 
 
 class PlayerMapping(TypedDict):
@@ -27,10 +25,6 @@ class BattleLog():
     self.tier: TIERS = TIERS.OU
     self.rated: bool = False
     self.current_turn: int = 1
-  
-  @staticmethod
-  def parse_player(player_name: str) -> str:
-    return player_name[:2]
   
   def add_pokemon(self, pokemon_name: str, player: str) -> None:
     if Pokemon(pokemon_name) not in self.teams[player]:
