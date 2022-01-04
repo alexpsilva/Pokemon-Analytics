@@ -26,7 +26,8 @@ def parse_battle_log(log: str) -> BattleLog:
     
     log_section = update_battle_section(line) or log_section
     handler_by_section[log_section](line, battle_log)
-    
+  
+  Logger().info(f'Finished parsing the battle log')
   return battle_log
 
 def update_battle_section(line: List[str]) -> Optional[BATTLE_LOG_SECTIONS]:

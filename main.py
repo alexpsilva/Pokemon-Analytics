@@ -21,10 +21,11 @@ for player in top_players:
 recent_battles = []
 for replay in recent_replays:
   battle = api.replay(replay['id'])
-  Logger().debug('--------P1-------')
-  Logger().debug(str(battle['log'].teams['p1']))
-  Logger().debug('\n--------P2-------')
-  Logger().debug(str(battle['log'].teams['p2']))
+
+  p1_team = battle['log'].teams['p1']
+  p2_team = battle['log'].teams['p2']
+  Logger().debug(f'P1 team:\n{p1_team}\n')
+  Logger().debug(f'P2 team:\n{p2_team}\n')
 
   recent_battles.append(battle)
 
