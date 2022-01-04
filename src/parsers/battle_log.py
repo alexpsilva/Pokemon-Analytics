@@ -9,7 +9,7 @@ from src.types.entities.battle_log import BattleLog
 class BattleLogParser():
 
   def __init__(self):
-    self.pokemon_name_mapping: Dict[str, str] = {}
+    self.pokemon_name_mapping: Dict[str, Dict[str, str]] = {}
 
   @staticmethod
   def parse_player_name(player_name: str) -> str:
@@ -90,21 +90,21 @@ class BattleLogParser():
         battle_log.current_turn = int(line[1])
         Logger().debug(f'Starting turn {battle_log.current_turn}')
     elif len(line) == 4 or len(line) == 5:
-      if line[0] == 'switch':
+      if line[0] == 'switch' or line[0] == 'drag':
         pokemon_name = self.parse_pokemon_name(line[2])
         raw_player, pokemon_nickname = line[1].split(': ')
         player = self.parse_player_name(raw_player)
         battle_log.add_pokemon(pokemon_name, player)
-        self.pokemon_name_mapping[pokemon_nickname] = pokemon_name
+        self.pokemon_name_mapping.setdefault(player, {}).setdefault(pokemon_nickname, pokemon_name)
       elif line[0] == '-ability':
         raw_player, pokemon_nickname = line[1].split(': ')
-        pokemon_name = self.pokemon_name_mapping[pokemon_nickname]
         player = self.parse_player_name(raw_player)
+        pokemon_name = self.pokemon_name_mapping[player][pokemon_nickname]
         battle_log.set_pokemon_ability(pokemon_name, player, line[2])
       elif line[0] == 'move':
         raw_player, pokemon_nickname = line[1].split(': ')
-        pokemon_name = self.pokemon_name_mapping[pokemon_nickname]
         player = self.parse_player_name(raw_player)
+        pokemon_name = self.pokemon_name_mapping[player][pokemon_nickname]
         move = line[2]
         battle_log.add_pokemon_move(pokemon_name, player, move)
     
@@ -114,11 +114,11 @@ class BattleLogParser():
 
         if len(line) > index + 1 and '[of]' in line[index + 1]:
           raw_player, pokemon_nickname = line[index + 1].split(': ')
-          pokemon_name = self.pokemon_name_mapping[pokemon_nickname]
           player = self.parse_player_name(raw_player.replace('[of] ', ''))
+          pokemon_name = self.pokemon_name_mapping[player][pokemon_nickname]
         else:
           raw_player, pokemon_nickname = line[1].split(': ')
-          pokemon_name = self.pokemon_name_mapping[pokemon_nickname]
           player = self.parse_player_name(raw_player)
+          pokemon_name = self.pokemon_name_mapping[player][pokemon_nickname]
 
         battle_log.set_pokemon_ability(pokemon_name, player, ability)

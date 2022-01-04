@@ -10,35 +10,38 @@ logger = Logger(LOGGER_LEVEL.INFO)
 
 ladder = api.ladder(format)
 top_players = [i['userid'] for i in ladder['toplist']]
-players_with_replays = []
-
-recent_replays = []
-for player in top_players:
-  Logger().info(f'Fetching replays for {player}')
-  recent_replays = api.recent_replays(format=format, username=player)
-  if len(recent_replays) > 3:
-    players_with_replays.append(player)
-    break
 
 recent_teams = {}
-for replay in recent_replays:
-  battle = api.replay(replay['id'])
+placing = 0
+while placing < 50:
+  placing += 1
+  if placing >= len(top_players):
+    Logger().error(f'There is no #{placing} on the ladder')
+    break
+  
+  player = top_players[placing]
+  Logger().info(f'Fetching replays for #{placing} {player}')
+  recent_replays = api.recent_replays(format=format, username=player)
+  if len(recent_replays) == 0:
+    Logger().warn(f'No replays found for player {player}')
+    continue
 
-  for player in ['p1', 'p2']:
-    player_name = battle['log'].players[player]
-    team = battle['log'].teams[player]
-    used_pokemon = tuple(str(pokemon.name) for pokemon in team.pokemon)
+  for replay in recent_replays:
+    battle = api.replay(replay['id'])
 
-    other_team = recent_teams.get(player_name, {}).get(used_pokemon)
-    if other_team is None:
-      recent_teams.setdefault(player_name, {}).setdefault(used_pokemon, team)
-    else:
-      Logger().info(f'Merging two {used_pokemon} (type) teams')
-      other_team.merge(team)
+    for player in ['p1']:
+      player_name = battle['log'].players[player]
+      team = battle['log'].teams[player]
+      used_pokemon = tuple(str(pokemon.name) for pokemon in team.pokemon)
 
+      other_team = recent_teams.get(player_name, {}).get(used_pokemon)
+      if other_team is None:
+        recent_teams.setdefault(player_name, {}).setdefault(used_pokemon, team)
+      else:
+        Logger().info(f'Merging two {used_pokemon} teams')
+        other_team.merge(team)
 
-for player in players_with_replays:
-  teams = recent_teams.get(player, {})
+for player, teams in recent_teams.items():
   Logger().info(f'---------- {player}\'s teams: -----------')
   for i, team in enumerate(teams.values()):
     Logger().info(f'\n{team}\n')
