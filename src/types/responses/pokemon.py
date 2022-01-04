@@ -25,7 +25,7 @@ class PokemonResponseEntry(TypedDict):
   num: int
   name: str
   types: List[TYPES]
-  genderRatio: PokemonGenderRatio
+  genderRatio: Optional[PokemonGenderRatio]
   baseStats: PokemonBaseStats
   abilities: PokemonAbilities
   heightm: float
@@ -33,6 +33,6 @@ class PokemonResponseEntry(TypedDict):
   color: str
   evos: List[str]
   eggGroups: List[str]
-  tier: TIERS
+  tier: Optional[TIERS]
 
 PokemonResponse = Dict[str, PokemonResponseEntry]
