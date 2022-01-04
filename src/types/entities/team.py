@@ -1,5 +1,5 @@
 from typing import List, Optional
-from src.types.pokemon import Pokemon
+from src.types.entities.pokemon import Pokemon
 
 class Team():
   def __init__(self, pokemon: Optional[List[Pokemon]] = None):

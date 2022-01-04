@@ -1,9 +1,9 @@
-from src.types.pokemon import Pokemon
+from src.types.entities.pokemon import Pokemon
 from src.types.enums.game_types import GAME_TYPES
 from typing import List, Optional
 from src.utils.logger import Logger
 from src.types.enums.battle_log_sections import BATTLE_LOG_SECTIONS
-from src.types.battle_log import BattleLog
+from src.types.entities.battle_log import BattleLog
 
 
 def parse_battle_log(log: str) -> BattleLog:

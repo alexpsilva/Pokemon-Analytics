@@ -4,7 +4,7 @@ from src.utils.logger import Logger
 from src.types.responses.moves import MovesResponse
 from src.types.responses.replay import Replay, ReplayResponse
 from src.types.responses.ladder import LadderResponse
-from src.types.battle_log import BattleLog
+from src.types.entities.battle_log import BattleLog
 from src.parsers.html import parse_list
 from typing import Dict, Optional, Union
 from datetime import datetime

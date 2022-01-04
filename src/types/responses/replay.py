@@ -1,4 +1,4 @@
-from src.types.battle_log import BattleLog
+from src.types.entities.battle_log import BattleLog
 from typing import List, Optional, TypedDict
 
 class ReplaySummary(TypedDict):
