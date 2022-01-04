@@ -1,3 +1,4 @@
+from src.types.responses.pokemon import PokemonResponse
 from src.utils.logger import Logger
 from src.types.responses.moves import MovesResponse
 from src.types.responses.replay import Replay, ReplayResponse
@@ -57,6 +58,10 @@ class ShowdownAPI:
 
   def moves(self) -> MovesResponse:
     url = self._build_url(self.HOSTS['POKEDEX'], 'data/moves.json')
+    return requests.get(url).json()
+
+  def pokemon(self) -> PokemonResponse:
+    url = self._build_url(self.HOSTS['POKEDEX'], 'data/pokedex.json')
     return requests.get(url).json()
 
   def ladder(self, _format: BATTLE_FORMATS) -> LadderResponse:
