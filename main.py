@@ -6,7 +6,7 @@ import json
 
 api = ShowdownAPI()
 format = BATTLE_FORMATS.GEN8BDSP_BATTLE_FESTIVAL_DOUBLES
-logger = Logger(LOGGER_LEVEL.DEBUG)
+logger = Logger(LOGGER_LEVEL.INFO)
 
 ladder = api.ladder(format)
 top_players = [i['userid'] for i in ladder['toplist']]
@@ -29,11 +29,12 @@ for replay in recent_replays:
     team = battle['log'].teams[player]
     used_pokemon = tuple(str(pokemon.name) for pokemon in team.pokemon)
 
-    if recent_teams.get(player_name, {}).get(used_pokemon) is None:
+    other_team = recent_teams.get(player_name, {}).get(used_pokemon)
+    if other_team is None:
       recent_teams.setdefault(player_name, {}).setdefault(used_pokemon, team)
     else:
       Logger().info(f'Merging two {used_pokemon} (type) teams')
-      pass # (to-do) merge info from both iterations of this team
+      other_team.merge(team)
 
 
 for player in players_with_replays:
