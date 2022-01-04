@@ -1,3 +1,4 @@
+from src.utils.logger import Logger
 from src.types.enums.types import TYPES
 from src.exceptions.pokemon import InvalidMove
 from src.repositories.move import MoveRepository
@@ -15,6 +16,7 @@ class Move():
   def __init__(self, name):
     data = MoveRepository().get_move(name)
     if data is None:
+      Logger().error(f'There is no "{name}" move in the current pokedex')
       raise InvalidMove
 
     self.name = name

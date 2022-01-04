@@ -1,3 +1,4 @@
+from src.utils.logger import Logger
 from src.types.responses.moves import MovesResponse
 from src.types.responses.replay import Replay, ReplayResponse
 from src.types.responses.ladder import LadderResponse
@@ -29,40 +30,44 @@ class ShowdownAPI:
   @staticmethod
   def _validate_battle_format(format: BATTLE_FORMATS) -> str:
     if format not in BATTLE_FORMATS:
+      Logger().error(f'Battle format {format} is not part of the BATTLE_FORMATS enum')
       raise InvalidBattleFormat
     return format.value
 
   @staticmethod
   def _validate_username(username: str) -> str:
     if type(username) is not str:
+      Logger().error(f'The username {username} ({type(username)}) is not a string')
       raise InvalidUsername
     return username
 
   @staticmethod
   def _validate_stat_date(date: Optional[str]) -> Union[str, None]:
     if type(date) is not str:
+      Logger().error(f'The date {date} ({type(date)}) is not a string')
       raise InvalidStatDate
     return date
+  
+  @staticmethod
+  def _validate_replay_id(replay_id: str) -> str:
+    if type(replay_id) is not str:
+      Logger().error(f'The replay_id {replay_id} ({type(replay_id)}) is not a string')
+      raise InvalidReplayID
+    return replay_id
 
   def moves(self) -> MovesResponse:
     url = self._build_url(self.HOSTS['POKEDEX'], 'data/moves.json')
     return requests.get(url).json()
 
   def ladder(self, _format: BATTLE_FORMATS) -> LadderResponse:
-    if _format is None:
-      raise InvalidBattleFormat
-    
     format = self._validate_battle_format(_format)
     url = self._build_url(self.HOSTS['MAIN'], f'ladder/{format}.json')
     return requests.get(url).json()
   
   def replay(self, replay_id: str) -> Replay:
-    if type(replay_id) is not str:
-      raise InvalidReplayID
-    
+    replay_id = self._validate_replay_id(replay_id)
     url = self._build_url(self.HOSTS['REPLAYS'], f'{replay_id}.json')
     response = requests.get(url).json()
-    print(response['log'])
     response['log'] = BattleLog(response['log'])
     return response
 

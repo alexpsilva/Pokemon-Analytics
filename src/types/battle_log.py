@@ -1,3 +1,4 @@
+from src.utils.logger import Logger
 from src.types.team import Team
 from src.types.pokemon import Pokemon
 from src.types.enums.tiers import TIERS
@@ -38,22 +39,28 @@ class BattleLog():
       elif len(line) == 2:
         if line[0] == 'win':
           self.current_section = BATTLE_LOG_SECTIONS.POSBATTLE
+      Logger().info(f'Starting {self.current_section} section')
 
     def parse_game_preview_line(line: List[str]) -> None:
       if len(line) == 1:
         if line[0] == 'rated':
           self.rated = True
+          Logger().debug(f'Game set to rated')
       elif len(line) == 2:
         if line[0] == 'gametype':
           self.game_type = GAME_TYPES(line[1])
+          Logger().debug(f'Game set to {self.game_type} battle')
         elif line[0]  == 'gen':
           self.generation = int(line[1])
+          Logger().debug(f'Game using GEN {self.generation} pokemon')
         # elif line[0] == 'tier':
-        #   print(line[1])
         #   self.tier = TIERS(line[1][-2: ])
       elif len(line) == 5:
         if line[0] == 'player':
-          self.players[line[1]] = line[2]
+          player_id = line[1]
+          player_name = line[2]
+          self.players[player_id] = player_name
+          Logger().debug(f'Player {player_id} named {player_name}')
 
     def parse_team_preview_line(line: List[str]) -> None:
       if len(line) == 3 and line[0] == 'poke':
@@ -65,6 +72,7 @@ class BattleLog():
       if len(line) == 2:
         if line[0] == 'turn':
           self.current_turn = int(line[1])
+          Logger().debug(f'Starting turn {self.current_turn}')
       elif len(line) == 4 or len(line) == 5:
         if line[0] == 'switch':
           raw_player, pokemon_name = line[1].split(': ')
@@ -72,24 +80,33 @@ class BattleLog():
 
           if Pokemon(pokemon_name) not in self.teams[player]:
             self.teams[player].add(Pokemon(pokemon_name))
+            Logger().debug(f'Adding {pokemon_name} to {player}\'s team')
         elif line[0] == '-ability':
           raw_player, pokemon_name = line[1].split(': ')
           player = parse_player(raw_player)
+          ability = line[2]
 
           pokemon = self.teams[player].get(Pokemon(pokemon_name))
           if pokemon is None:
+            Logger().error(f'{pokemon_name} is not a part of {player}\'s team. Currently, it has:')
+            Logger().error(self.teams[player])
             raise InvalidPokemon
 
-          pokemon.set_ability(line[2])
+          pokemon.set_ability(ability)
+          Logger().debug(f'Setting {player}\'s ability to {ability}')
         elif line[0] == 'move':
           raw_player, pokemon_name = line[1].split(': ')
           player = parse_player(raw_player)
+          move = line[2]
 
           pokemon = self.teams[player].get(Pokemon(pokemon_name))
           if pokemon is None:
+            Logger().error(f'{pokemon_name} is not a part of {player}\'s team. Currently, it has:')
+            Logger().error(self.teams[player])
             raise InvalidPokemon
 
-          pokemon.add_move(line[2])
+          pokemon.add_move(move)
+          Logger().debug(f'Adding move {move} to {player}\'s {pokemon_name}')
             
 
     handler_by_section = {
@@ -100,12 +117,13 @@ class BattleLog():
     }
 
     for raw_line in log.split('\n'):
+      Logger().debug(f'Parsing: {raw_line}')
       line = list(filter(lambda x: x, raw_line.split('|')))
       if len(line) == 0:
+        Logger().debug(f'Skipping empty line')
         continue
       
       update_battle_section(line)
-      # print(f'({self.current_section.value}) {line}')
       handler_by_section[self.current_section](line)
     
     # print(f'players: {self.players}')
