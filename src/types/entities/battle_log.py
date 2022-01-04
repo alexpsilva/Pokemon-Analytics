@@ -31,6 +31,16 @@ class BattleLog():
       self.teams[player].add(Pokemon(pokemon_name))
       Logger().debug(f'Adding {pokemon_name} to {player}\'s team')
 
+  def set_pokemon_item(self, pokemon_name: str, player: str, item: str) -> None:
+    pokemon = self.teams[player].get(Pokemon(pokemon_name))
+    if pokemon is None:
+      Logger().error(f'{pokemon_name} is not a part of {player}\'s team. Currently, it has:')
+      Logger().error(self.teams[player])
+      raise InvalidPokemon
+
+    pokemon.set_item(item)
+    Logger().debug(f'Setting {player}\'s {pokemon_name} item to {item}')
+
   def set_pokemon_ability(self, pokemon_name: str, player: str, ability: str) -> None:
     pokemon = self.teams[player].get(Pokemon(pokemon_name))
     if pokemon is None:
@@ -39,7 +49,7 @@ class BattleLog():
       raise InvalidPokemon
 
     pokemon.set_ability(ability)
-    Logger().debug(f'Setting {player}\'s ability to {ability}')
+    Logger().debug(f'Setting {player}\'s {pokemon_name} ability to {ability}')
   
   def add_pokemon_move(self, pokemon_name: str, player: str, move: str) -> None:
     pokemon = self.teams[player].get(Pokemon(pokemon_name))

@@ -12,3 +12,6 @@ class InvalidPlayer(BattleLogParseError):
 
 class InvalidPokemon(BattleLogParseError):
   pass
+
+class InvalidBattleLogLine(BattleLogParseError):
+  pass

@@ -32,6 +32,12 @@ class Team():
         Logger().warn(f'Found two {pokemon.name} with different abilities ({pokemon.ability} / {other_pokemon.ability})')
       elif len(abilities) == 1:
         pokemon.ability = abilities[0]
+
+      items = list({i for i in [other_pokemon.item, pokemon.item] if i is not None})
+      if len(items) > 1:
+        Logger().warn(f'Found two {pokemon.name} with different items ({pokemon.item} / {other_pokemon.item})')
+      elif len(items) == 1:
+        pokemon.item = items[0]
       
       pokemon.moves = list(set(pokemon.moves + other_pokemon.moves))
     Logger().debug(f'Finished merging teams')

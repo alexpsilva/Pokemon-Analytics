@@ -29,18 +29,17 @@ while placing < 50:
 
   for replay in recent_replays:
     battle = api.replay(replay['id'])
+    
+    player_position = 'p1' if battle['log'].players['p1'] == player else 'p2'
+    team = battle['log'].teams[player_position]
+    used_pokemon = frozenset(str(pokemon.name) for pokemon in team.pokemon)
 
-    for player in ['p1']:
-      player_name = battle['log'].players[player]
-      team = battle['log'].teams[player]
-      used_pokemon = tuple(str(pokemon.name) for pokemon in team.pokemon)
-
-      other_team = recent_teams.get(player_name, {}).get(used_pokemon)
-      if other_team is None:
-        recent_teams.setdefault(player_name, {}).setdefault(used_pokemon, team)
-      else:
-        Logger().info(f'Merging two {used_pokemon} teams')
-        other_team.merge(team)
+    other_team = recent_teams.get(player, {}).get(used_pokemon)
+    if other_team is None:
+      recent_teams.setdefault(player, {}).setdefault(used_pokemon, team)
+    else:
+      Logger().info(f'Merging two {used_pokemon} teams')
+      other_team.merge(team)
 
 with open(output_filename, 'w') as file:
   Logger().info(f'Outputing teams into {output_filename}')
