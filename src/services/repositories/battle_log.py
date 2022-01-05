@@ -1,3 +1,4 @@
+from src.services.repositories.pokemon import PokemonService
 from typing import Dict, List, Optional, Tuple
 
 from .exceptions.battle_log import InvalidBattleLogLine
@@ -81,7 +82,8 @@ class BattleLogParser():
     if len(line) == 3 and line[0] == 'poke':
       if line[0] == 'poke':
         pokemon_name = self.parse_pokemon_name(line[2])
-        battle_log.teams[line[1]].add(Pokemon(pokemon_name))
+        pokemon = PokemonService().get_pokemon(pokemon_name)
+        battle_log.teams[line[1]].add(pokemon)
 
   def parse_battle_line(self, line: List[str], battle_log: BattleLog) -> None:
 

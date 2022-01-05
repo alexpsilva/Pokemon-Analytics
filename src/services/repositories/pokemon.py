@@ -2,6 +2,8 @@ from typing import Dict
 
 from .exceptions.pokemon import InvalidPokemon
 
+from src.entities.pokemon import Pokemon
+
 from src.utils.logger import Logger
 from src.utils.singleton import Singleton
 
@@ -16,36 +18,22 @@ class PokemonService(metaclass=Singleton):
     response = ShowdownAPI().pokemon()
 
     for raw_pokemon in response.values():
-      pokemon_data: PokemonResponseEntry = {
-        "num": raw_pokemon['num'],
-        "name": raw_pokemon['name'],
-        "types": raw_pokemon['types'],
-        "genderRatio": raw_pokemon.get('genderRatio'),
-        "baseStats": {
-          "hp": raw_pokemon['baseStats']['hp'],
-          "atk": raw_pokemon['baseStats']['atk'],
-          "def": raw_pokemon['baseStats']['def'],
-          "spa": raw_pokemon['baseStats']['spa'],
-          "spd": raw_pokemon['baseStats']['spd'],
-          "spe": raw_pokemon['baseStats']['spe'],
-        },
-        "abilities": raw_pokemon['abilities'],
-        "heightm": raw_pokemon['heightm'],
-        "weightkg": raw_pokemon['weightkg'],
-        "color": raw_pokemon['color'],
-        "evos": raw_pokemon.get('evos') or [],
-        "eggGroups": raw_pokemon['eggGroups'],
-        "tier": raw_pokemon.get('tier'),
-        "cosmeticFormes": raw_pokemon.get('cosmeticFormes') or []
-      }
-      self._data[raw_pokemon['name']] = pokemon_data
-      for cosmetic_form in pokemon_data['cosmeticFormes']:
-        self._data[cosmetic_form] = pokemon_data
+      self._data[raw_pokemon['name']] = raw_pokemon
+      for cosmetic_form in raw_pokemon.get('cosmeticFormes', []):
+        self._data[cosmetic_form] = raw_pokemon
 
-  def get_pokemon(self, name: str) -> PokemonResponseEntry:
+  def get_pokemon(self, name: str) -> Pokemon:
     if name not in self._data:
       Logger().error(f'There is no "{name}" pokemon in the current pokedex')
       raise InvalidPokemon
-    return self._data[name]
+    
+    data = self._data[name]
+    params = {'name': data['name']}
+    
+    possible_abilities = data['abilities']
+    if len(possible_abilities.values()) == 1:
+      params['ability'] = possible_abilities['0']
+
+    return Pokemon(**params)
   
 
