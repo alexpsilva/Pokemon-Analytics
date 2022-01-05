@@ -6,7 +6,7 @@ class SecondaryEffect(TypedDict):
 
 class MoveResponseEntry(TypedDict):
   num: int
-  accuracy: bool
+  accuracy: float
   basePower: int
   category: str
   isNonstandard: str

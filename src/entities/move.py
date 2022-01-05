@@ -1,27 +1,25 @@
+from typing import Optional
 from src.enums.types import TYPES
 
-from src.services.repositories.move import MoveService
-
 class Move():
-  name: str
-  type: TYPES
-  
-  accuracy: int
-  base_power: int
-  priority: int
-  max_pp: int
-  current_pp: int
 
-  def __init__(self, name):
-    data = MoveService().get_move(name)
-
-    self.name = name
-    self.max_pp = data['pp']
-    self.current_pp = self.max_pp
-    self.type = TYPES(data['type'])
-    self.priority = data['priority']
-    self.accuracy = data['accuracy']
-    self.base_power = data['basePower']
+  def __init__(
+      self, 
+      name: str, 
+      max_pp: int, 
+      type: TYPES, 
+      accuracy: float, 
+      priority: int = 0, 
+      base_power: Optional[int] = None, 
+      current_pp: Optional[int] = None
+    ):
+    self.name: str = name
+    self.max_pp: int = max_pp
+    self.current_pp: int = current_pp or self.max_pp
+    self.type: TYPES = type
+    self.priority: int = priority
+    self.accuracy: float = accuracy
+    self.base_power: Optional[int] = base_power
 
   def __repr__(self):
     return f'{self.name} ({self.current_pp}/{self.max_pp})'

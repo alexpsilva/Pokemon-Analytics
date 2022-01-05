@@ -3,6 +3,7 @@ from typing import List, Optional
 from src.entities.move import Move
 
 from src.services.repositories.pokemon import PokemonService
+from src.services.repositories.move import MoveService
 
 class Pokemon():
   def __init__(self, name: str):
@@ -44,4 +45,4 @@ class Pokemon():
 
   def add_move(self, move: str):
     if len([i for i in self.moves if i.name == move]) == 0:
-      self.moves.append(Move(move))
+      self.moves.append(MoveService().get_move(move))
