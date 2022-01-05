@@ -4,7 +4,7 @@ import requests
 
 from .dto.pokemon import PokemonResponse
 from .dto.moves import MovesResponse
-from .dto.replay import Replay, ReplayResponse
+from .dto.replay import ReplayResponse, ReplaySumaryResponse
 from .dto.ladder import LadderResponse
 
 from src.utils.logger import Logger
@@ -69,19 +69,13 @@ class ShowdownAPI:
     format = self._validate_battle_format(_format)
     url = self._build_url(self.HOSTS['MAIN'], f'ladder/{format}.json')
     return requests.get(url).json()
-  
-  # def user(self, username) -> JSON:
-  #   url = self._build_url(self.POKEMON_SHOWDOWN_HOSTS['MAIN'], f'{username}.json')
 
-  def replay(self, replay_id: str) -> Replay:
+  def replay(self, replay_id: str) -> ReplayResponse:
     replay_id = self._validate_replay_id(replay_id)
     url = self._build_url(self.HOSTS['REPLAYS'], f'{replay_id}.json')
-    response = requests.get(url).json()
-    response['log'] = BattleLogParser().parse(response['log'])
-    response['log'].players = {'p1': response['p1id'], 'p2': response['p2id']}
-    return response
+    return requests.get(url).json()
 
-  def recent_replays(self, username: Optional[str]=None, format: Optional[BATTLE_FORMATS]=None) -> ReplayResponse:
+  def recent_replays(self, username: Optional[str]=None, format: Optional[BATTLE_FORMATS]=None) -> ReplaySumaryResponse:
     params: Dict[str, str] = {}
     if format is not None:
       params['format'] = self._validate_battle_format(format)
@@ -91,6 +85,10 @@ class ShowdownAPI:
     
     url = self._build_url(self.HOSTS['REPLAYS'], 'search.json')
     return requests.get(url, params).json()
+
+
+
+  # ----------- (to-do) evaluate wether to keep it or delete it ------------
 
   def latest_stat(self) -> Union[str, None]:
     base_url = self._build_url(self.HOSTS['SMOGON'], 'stats')
@@ -114,6 +112,9 @@ class ShowdownAPI:
       date = self._validate_stat_date(date)
 
     # (to-do)
+  
+  # def user(self, username) -> JSON:
+  #   url = self._build_url(self.POKEMON_SHOWDOWN_HOSTS['MAIN'], f'{username}.json')
 
   def format(self, _format: BATTLE_FORMATS):
     format = self._validate_battle_format(_format)
