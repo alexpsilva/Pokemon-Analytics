@@ -1,9 +1,9 @@
-from src.services.repositories.pokemon import PokemonService
 from typing import List, Optional
 
 from src.utils.logger import Logger
 
 from src.entities.pokemon import Pokemon
+from src.services.repositories.pokemon import PokemonService
 
 class Team():
   def __init__(self, pokemon: Optional[List[Pokemon]] = None):
@@ -18,7 +18,7 @@ class Team():
   def add(self, pokemon: Pokemon) -> None:
     self.pokemon.append(pokemon)
   
-  def get(self, pokemon_name: str) -> Optional[Pokemon]:
+  def get_pokemon(self, pokemon_name: str) -> Optional[Pokemon]:
     # Fetch a Pokemon instance because the 'name' may change
     pokemon = PokemonService().get_pokemon(pokemon_name) 
     candidates = [i for i in self.pokemon if i.name == pokemon.name]

@@ -1,3 +1,4 @@
+from src.enums.player_position import PLAYER_POSITION
 from src.services.repositories.pokemon import PokemonService
 from typing import Dict, List, Optional, Tuple
 
@@ -11,15 +12,14 @@ from src.entities.pokemon import Pokemon
 from src.entities.battle_log import BattleLog
 
 
-
 class BattleLogParser():
 
   def __init__(self):
-    self.pokemon_name_mapping: Dict[str, Dict[str, str]] = {}
+    self.pokemon_name_mapping: Dict[PLAYER_POSITION, Dict[str, str]] = {}
 
   @staticmethod
-  def parse_player_name(player_name: str) -> str:
-    return player_name[:2]
+  def parse_player_name(player_name: str) -> PLAYER_POSITION:
+    return PLAYER_POSITION(player_name[:2])
 
   @staticmethod
   def parse_pokemon_name(pokemon_name: str) -> str:
@@ -83,7 +83,8 @@ class BattleLogParser():
       if line[0] == 'poke':
         pokemon_name = self.parse_pokemon_name(line[2])
         pokemon = PokemonService().get_pokemon(pokemon_name)
-        battle_log.teams[line[1]].add(pokemon)
+        player = self.parse_player_name(line[1])
+        battle_log.teams[player].add(pokemon)
 
   def parse_battle_line(self, line: List[str], battle_log: BattleLog) -> None:
 
@@ -91,7 +92,7 @@ class BattleLogParser():
       if len(line) < num_segments:
         raise InvalidBattleLogLine
     
-    def parse_header_segments() -> Tuple[str, str]:
+    def parse_header_segments() -> Tuple[str, PLAYER_POSITION]:
       expect_segments(2)
       raw_player, pokemon_nickname = line[1].split(': ')
       player = self.parse_player_name(raw_player)
