@@ -26,9 +26,6 @@ class Replay():
     }
     self.game_type: GAME_TYPES = GAME_TYPES.SINGLES
     self.generation: int = 8
-    self.tier: TIERS = TIERS.OU
-    self.rated: bool = False
-    self.current_turn: int = 1
   
   def add_pokemon(self, pokemon_name: str, player: PLAYER_POSITION) -> None:
     pokemon = self.teams[player].get_pokemon(pokemon_name)
