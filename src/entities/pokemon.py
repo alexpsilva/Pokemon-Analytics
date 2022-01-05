@@ -1,26 +1,22 @@
 from src.utils.logger import Logger
 from typing import List, Optional
-from src.services.repositories.exceptions.battle_log import InvalidPokemon
-from src.services.repositories.pokemon import PokemonService
+
 from src.entities.move import Move
 
 class Pokemon():
-  def __init__(self, name: str):
-    self.name = name
-    self.ability: Optional[str] = None
-    self.item: Optional[str] = None
-    self.moves: List[Move] = []
-
-    data = PokemonService().get_pokemon(name)
-    if data is None:
-      Logger().error(f'There is no "{name}" pokemon in the current pokedex')
-      raise InvalidPokemon
-
-    self.possible_abilities = data['abilities']
-    if len(self.possible_abilities.values()) == 1:
-      self.ability = self.possible_abilities['0']
+  def __init__(
+    self, 
+    name: str, 
+    ability: Optional[str] = None, 
+    item: Optional[str] = None, 
+    moves: Optional[List[Move]] = []
+  ): 
+    self.name: str = name
+    self.ability: Optional[str] = ability
+    self.item: Optional[str] = item
+    self.moves: List[Move] = moves or []
   
-  def __repr__(self):
+  def __repr__(self) -> str:
     pokemon_str = f'{self.name}'
     moves_str = '\n'.join([f' - {move}' for move in self.moves])
 
@@ -36,15 +32,22 @@ class Pokemon():
 
     return pokemon_str + optionals_str + ':\n' + moves_str
   
-  def __eq__(self, other):
+  def __eq__(self, other) -> bool:
     return self.name == other.name
   
-  def set_ability(self, ability: str):
+  def set_ability(self, ability: str) -> None:
     self.ability = ability
 
-  def set_item(self, item: str):
+  def set_item(self, item: str) -> None:
     self.item = item
 
-  def add_move(self, move: str):
-    if len([i for i in self.moves if i.name == move]) == 0:
-      self.moves.append(Move(move))
+  def add_move(self, move: Move) -> None:
+    if move in self.moves:
+      Logger().info(f'Did not teach {move.name} to {self.name} because it already knows this move')
+      return
+
+    self.moves.append(move)
+
+    if len(self.moves) > 4:
+      Logger().warn(f'{self.name} has learned his {len(self.moves)}th move')
+    

@@ -1,5 +1,8 @@
-from src.utils.logger import Logger
+from src.services.repositories.pokemon import PokemonService
 from typing import List, Optional
+
+from src.utils.logger import Logger
+
 from src.entities.pokemon import Pokemon
 
 class Team():
@@ -15,9 +18,11 @@ class Team():
   def add(self, pokemon: Pokemon) -> None:
     self.pokemon.append(pokemon)
   
-  def get(self, pokemon: Pokemon) -> Optional[Pokemon]:
-    possible = [i for i in self.pokemon if i == pokemon]
-    return possible[0] if possible else None
+  def get(self, pokemon_name: str) -> Optional[Pokemon]:
+    # Fetch a Pokemon instance because the 'name' may change
+    pokemon = PokemonService().get_pokemon(pokemon_name) 
+    candidates = [i for i in self.pokemon if i.name == pokemon.name]
+    return candidates[0] if candidates else None
   
   def merge(self, other: 'Team') -> None:
     other_pokemon_by_name = {pokemon.name: pokemon for pokemon in other.pokemon}

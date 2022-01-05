@@ -1,5 +1,5 @@
-from src.enums.logger_level import LOGGER_LEVEL
 from src.utils.singleton import Singleton
+from src.enums.logger_level import LOGGER_LEVEL
 
 class bcolors:
     HEADER = '\033[95m'

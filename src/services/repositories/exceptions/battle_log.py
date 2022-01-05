@@ -10,7 +10,7 @@ class InvalidTier(BattleLogParseError):
 class InvalidPlayer(BattleLogParseError):
   pass
 
-class InvalidPokemon(BattleLogParseError):
+class PokemonNotInTeam(BattleLogParseError):
   pass
 
 class InvalidBattleLogLine(BattleLogParseError):

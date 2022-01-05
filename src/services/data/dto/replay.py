@@ -1,4 +1,3 @@
-from src.entities.battle_log import BattleLog
 from typing import List, Optional, TypedDict
 
 class ReplaySummary(TypedDict):
@@ -8,10 +7,10 @@ class ReplaySummary(TypedDict):
   p1: str
   p2: str
 
-ReplayResponse = List[ReplaySummary]
+ReplaySumaryResponse = List[ReplaySummary]
 
-class Replay(ReplaySummary):
-  log: BattleLog
+class ReplayResponse(ReplaySummary):
+  log: str
   views: int
   p1id: str
   p2id: str
