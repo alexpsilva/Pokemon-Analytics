@@ -1,4 +1,4 @@
-from src.types.enums.logger_level import LOGGER_LEVEL
+from src.enums.logger_level import LOGGER_LEVEL
 from src.utils.singleton import Singleton
 
 class bcolors:

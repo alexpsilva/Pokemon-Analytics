@@ -1,10 +1,10 @@
 from src.utils.logger import Logger
 from typing import Optional, TypedDict
-from src.exceptions.battle_log import InvalidPokemon
-from src.types.enums.tiers import TIERS
-from src.types.enums.game_types import GAME_TYPES
-from src.types.entities.team import Team
-from src.types.entities.pokemon import Pokemon
+from src.services.repositories.exceptions.battle_log import InvalidPokemon
+from src.enums.tiers import TIERS
+from src.enums.game_types import GAME_TYPES
+from src.entities.team import Team
+from src.entities.pokemon import Pokemon
 
 
 class PlayerMapping(TypedDict):

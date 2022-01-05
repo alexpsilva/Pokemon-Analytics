@@ -1,5 +1,5 @@
-from src.types.enums.tiers import TIERS
-from src.types.enums.types import TYPES
+from src.enums.tiers import TIERS
+from src.enums.types import TYPES
 from typing import Dict, Optional, TypedDict, List
 
 PokemonBaseStats = TypedDict('PokemonBaseStats', {

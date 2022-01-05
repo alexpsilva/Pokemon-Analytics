@@ -1,15 +1,15 @@
 from src.utils.logger import Logger
 from typing import Dict, Optional
-from src.types.responses.moves import MoveResponseEntry
+from src.services.data.dto.moves import MoveResponseEntry
 from src.utils.singleton import Singleton
-import src.showdown_api
+import src.services.data.showdown
 
-class MoveRepository(metaclass=Singleton):
+class MoveService(metaclass=Singleton):
   _data: Dict[str, MoveResponseEntry] = {}
 
   def __init__(self):
     Logger().info(f'Initializing Move repository')
-    response = src.showdown_api.ShowdownAPI().moves()
+    response = src.services.data.showdown.ShowdownAPI().moves()
 
     for raw_move in response.values():
       self._data[raw_move['name']] = {

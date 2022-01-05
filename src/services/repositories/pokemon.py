@@ -1,15 +1,15 @@
 from src.utils.logger import Logger
-from src.types.responses.pokemon import PokemonResponseEntry
+from src.services.data.dto.pokemon import PokemonResponseEntry
 from typing import Dict, Optional
 from src.utils.singleton import Singleton
-import src.showdown_api
+import src.services.data.showdown
 
-class PokemonRepository(metaclass=Singleton):
+class PokemonService(metaclass=Singleton):
   _data: Dict[str, PokemonResponseEntry] = {}
 
   def __init__(self):
     Logger().info(f'Initializing Pokemon repository')
-    response = src.showdown_api.ShowdownAPI().pokemon()
+    response = src.services.data.showdown.ShowdownAPI().pokemon()
 
     for raw_pokemon in response.values():
       pokemon_data: PokemonResponseEntry = {

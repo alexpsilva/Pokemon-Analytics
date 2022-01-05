@@ -1,17 +1,17 @@
-from src.parsers.battle_log import BattleLogParser
-from src.types.responses.pokemon import PokemonResponse
-from src.utils.logger import Logger
-from src.types.responses.moves import MovesResponse
-from src.types.responses.replay import Replay, ReplayResponse
-from src.types.responses.ladder import LadderResponse
-from src.types.entities.battle_log import BattleLog
-from src.parsers.html import parse_list
 from typing import Dict, Optional, Union
 from datetime import datetime
 import requests
 
-from src.types.enums.battle_formats import BATTLE_FORMATS
-from .exceptions.api import *
+from .dto.pokemon import PokemonResponse
+from .dto.moves import MovesResponse
+from .dto.replay import Replay, ReplayResponse
+from .dto.ladder import LadderResponse
+
+from src.utils.logger import Logger
+from src.services.repositories.battle_log import BattleLogParser
+from src.utils.parse_html import parse_list
+from src.enums.battle_formats import BATTLE_FORMATS
+from .exceptions.showdown import *
 
 class ShowdownAPI:
   HOSTS = {

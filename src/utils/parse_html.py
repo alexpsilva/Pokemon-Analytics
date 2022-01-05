@@ -1,7 +1,6 @@
 import re
-from typing import List, Optional
+from typing import List
 from bs4 import BeautifulSoup
-from bs4.element import Tag
 
 def parse_list(html: str, regexp, tag: str='a') -> List[str]:
   def is_valid_tag(x):

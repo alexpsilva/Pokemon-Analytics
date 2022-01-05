@@ -1,6 +1,6 @@
 from src.utils.logger import Logger
 from typing import List, Optional
-from src.types.entities.pokemon import Pokemon
+from src.entities.pokemon import Pokemon
 
 class Team():
   def __init__(self, pokemon: Optional[List[Pokemon]] = None):
