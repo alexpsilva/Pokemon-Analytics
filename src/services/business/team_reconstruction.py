@@ -3,7 +3,7 @@ from src.utils.logger import Logger
 from src.enums.battle_formats import BATTLE_FORMATS
 from src.enums.player_position import PLAYER_POSITION
 
-from src.services.repositories.battle_log import BattleLogParser
+from src.services.repositories.replay import ReplayService
 from src.services.data.showdown import ShowdownAPI
 
 
@@ -27,12 +27,12 @@ def reconstruct_teams(output_filename: str, format: BATTLE_FORMATS, min_placing:
       Logger().warn(f'No replays found for player {player}')
       continue
 
-    for replay in recent_replays:
-      replay = api.replay(replay['id'])
-      player_position = PLAYER_POSITION.P1 if replay['p1id'] == player else PLAYER_POSITION.P2
+    for replay_summary in recent_replays:
+      raw_replay = api.replay(replay_summary['id'])
+      player_position = PLAYER_POSITION.P1 if raw_replay['p1id'] == player else PLAYER_POSITION.P2
       
-      battle_log = BattleLogParser().parse(replay['log'])
-      team = battle_log.teams[player_position]
+      replay = ReplayService().parse(raw_replay['log'])
+      team = replay.teams[player_position]
       used_pokemon = frozenset(str(pokemon.name) for pokemon in team.pokemon)
 
       other_team = recent_teams.get(player, {}).get(used_pokemon)

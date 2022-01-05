@@ -1,6 +1,6 @@
 from typing import Dict, Optional
 
-from src.services.repositories.exceptions.battle_log import PokemonNotInTeam
+from src.services.repositories.exceptions.replay import PokemonNotInTeam
 
 from src.utils.logger import Logger
 
@@ -13,7 +13,7 @@ from src.services.repositories.pokemon import PokemonService
 from src.services.repositories.move import MoveService
 
 
-class BattleLog():
+class Replay():
 
   def __init__(self):
     self.players: Dict[PLAYER_POSITION, Optional[str]] = {

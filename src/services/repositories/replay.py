@@ -2,17 +2,16 @@ from src.enums.player_position import PLAYER_POSITION
 from src.services.repositories.pokemon import PokemonService
 from typing import Dict, List, Optional, Tuple
 
-from .exceptions.battle_log import InvalidBattleLogLine
+from .exceptions.replay import InvalidBattleLogLine
 
 from src.utils.logger import Logger
 
 from src.enums.game_types import GAME_TYPES
 from src.enums.battle_log_sections import BATTLE_LOG_SECTIONS
-from src.entities.pokemon import Pokemon
-from src.entities.battle_log import BattleLog
+from src.entities.replay import Replay
 
 
-class BattleLogParser():
+class ReplayService():
 
   def __init__(self):
     self.pokemon_name_mapping: Dict[PLAYER_POSITION, Dict[str, str]] = {}
@@ -26,8 +25,8 @@ class BattleLogParser():
     # Pokemon are named as '<Name>, L<Level>, <Gender>'
     return pokemon_name.split(', ')[0]
 
-  def parse(self, log: str) -> BattleLog:
-    battle_log = BattleLog()
+  def parse(self, log: str) -> Replay:
+    battle_log = Replay()
     
     log_section: BATTLE_LOG_SECTIONS = BATTLE_LOG_SECTIONS.GAME_PREVIEW
     handler_by_section = {
@@ -63,7 +62,7 @@ class BattleLogParser():
         Logger().info(f'Starting {BATTLE_LOG_SECTIONS.POSBATTLE} section')
         return BATTLE_LOG_SECTIONS.POSBATTLE
 
-  def parse_game_preview_line(self, line: List[str], battle_log: BattleLog) -> None:
+  def parse_game_preview_line(self, line: List[str], battle_log: Replay) -> None:
     if len(line) == 1:
       if line[0] == 'rated':
         battle_log.rated = True
@@ -78,7 +77,7 @@ class BattleLogParser():
       # elif line[0] == 'tier':
       #   self.tier = TIERS(line[1][-2: ])
 
-  def parse_team_preview_line(self, line: List[str], battle_log: BattleLog) -> None:
+  def parse_team_preview_line(self, line: List[str], battle_log: Replay) -> None:
     if len(line) == 3 and line[0] == 'poke':
       if line[0] == 'poke':
         pokemon_name = self.parse_pokemon_name(line[2])
@@ -86,7 +85,7 @@ class BattleLogParser():
         player = self.parse_player_name(line[1])
         battle_log.teams[player].add(pokemon)
 
-  def parse_battle_line(self, line: List[str], battle_log: BattleLog) -> None:
+  def parse_battle_line(self, line: List[str], battle_log: Replay) -> None:
 
     def expect_segments(num_segments: int) -> None:
       if len(line) < num_segments:
