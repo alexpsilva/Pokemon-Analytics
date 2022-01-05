@@ -1,6 +1,9 @@
-from src.utils.logger import Logger
 from typing import Optional, TypedDict
-from src.services.repositories.exceptions.battle_log import InvalidPokemon
+
+from src.services.repositories.exceptions.battle_log import PokemonNotInTeam
+
+from src.utils.logger import Logger
+
 from src.enums.tiers import TIERS
 from src.enums.game_types import GAME_TYPES
 from src.entities.team import Team
@@ -36,7 +39,7 @@ class BattleLog():
     if pokemon is None:
       Logger().error(f'{pokemon_name} is not a part of {player}\'s team. Currently, it has:')
       Logger().error(self.teams[player])
-      raise InvalidPokemon
+      raise PokemonNotInTeam
 
     pokemon.set_item(item)
     Logger().debug(f'Setting {player}\'s {pokemon_name} item to {item}')
@@ -46,7 +49,7 @@ class BattleLog():
     if pokemon is None:
       Logger().error(f'{pokemon_name} is not a part of {player}\'s team. Currently, it has:')
       Logger().error(self.teams[player])
-      raise InvalidPokemon
+      raise PokemonNotInTeam
 
     pokemon.set_ability(ability)
     Logger().debug(f'Setting {player}\'s {pokemon_name} ability to {ability}')
@@ -56,7 +59,7 @@ class BattleLog():
     if pokemon is None:
       Logger().error(f'{pokemon_name} is not a part of {player}\'s team. Currently, it has:')
       Logger().error(self.teams[player])
-      raise InvalidPokemon
+      raise PokemonNotInTeam
 
     pokemon.add_move(move)
     Logger().debug(f'Adding move {move} to {player}\'s {pokemon_name}')

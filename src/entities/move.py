@@ -1,6 +1,5 @@
-from src.utils.logger import Logger
 from src.enums.types import TYPES
-from src.services.repositories.exceptions.pokemon import InvalidMove
+
 from src.services.repositories.move import MoveService
 
 class Move():
@@ -15,9 +14,6 @@ class Move():
 
   def __init__(self, name):
     data = MoveService().get_move(name)
-    if data is None:
-      Logger().error(f'There is no "{name}" move in the current pokedex')
-      raise InvalidMove
 
     self.name = name
     self.max_pp = data['pp']

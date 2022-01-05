@@ -1,10 +1,14 @@
-from src.utils.logger import Logger
 from typing import Dict, List, Optional, Tuple
-from src.services.repositories.exceptions.battle_log import InvalidBattleLogLine
+
+from .exceptions.battle_log import InvalidBattleLogLine
+
+from src.utils.logger import Logger
+
 from src.enums.game_types import GAME_TYPES
 from src.enums.battle_log_sections import BATTLE_LOG_SECTIONS
 from src.entities.pokemon import Pokemon
 from src.entities.battle_log import BattleLog
+
 
 
 class BattleLogParser():

@@ -1,5 +1,7 @@
-from src.utils.logger import Logger
 from typing import List, Optional
+
+from src.utils.logger import Logger
+
 from src.entities.pokemon import Pokemon
 
 class Team():

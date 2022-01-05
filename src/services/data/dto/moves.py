@@ -1,4 +1,4 @@
-from typing import Dict, Optional, TypedDict, List
+from typing import Dict, Optional, TypedDict
 
 class SecondaryEffect(TypedDict):
   chance: int

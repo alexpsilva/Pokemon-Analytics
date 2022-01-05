@@ -1,7 +1,9 @@
-from src.services.repositories.battle_log import BattleLogParser
 from src.utils.logger import Logger
-from src.services.data.showdown import ShowdownAPI
+
 from src.enums.battle_formats import BATTLE_FORMATS
+
+from src.services.repositories.battle_log import BattleLogParser
+from src.services.data.showdown import ShowdownAPI
 
 
 def reconstruct_teams(output_filename: str, format: BATTLE_FORMATS, min_placing: int = 50):

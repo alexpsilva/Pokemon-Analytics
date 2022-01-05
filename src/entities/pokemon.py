@@ -1,8 +1,8 @@
-from src.utils.logger import Logger
 from typing import List, Optional
-from src.services.repositories.exceptions.battle_log import InvalidPokemon
-from src.services.repositories.pokemon import PokemonService
+
 from src.entities.move import Move
+
+from src.services.repositories.pokemon import PokemonService
 
 class Pokemon():
   def __init__(self, name: str):
@@ -12,9 +12,6 @@ class Pokemon():
     self.moves: List[Move] = []
 
     data = PokemonService().get_pokemon(name)
-    if data is None:
-      Logger().error(f'There is no "{name}" pokemon in the current pokedex')
-      raise InvalidPokemon
 
     self.possible_abilities = data['abilities']
     if len(self.possible_abilities.values()) == 1:

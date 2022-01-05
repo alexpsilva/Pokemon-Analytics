@@ -1,15 +1,19 @@
+from typing import Dict
+
+from .exceptions.move import InvalidMove
+
 from src.utils.logger import Logger
-from typing import Dict, Optional
-from src.services.data.dto.moves import MoveResponseEntry
 from src.utils.singleton import Singleton
-import src.services.data.showdown
+
+from src.services.data.showdown import ShowdownAPI
+from src.services.data.dto.moves import MoveResponseEntry
 
 class MoveService(metaclass=Singleton):
   _data: Dict[str, MoveResponseEntry] = {}
 
   def __init__(self):
     Logger().info(f'Initializing Move repository')
-    response = src.services.data.showdown.ShowdownAPI().moves()
+    response = ShowdownAPI().moves()
 
     for raw_move in response.values():
       self._data[raw_move['name']] = {
@@ -32,7 +36,10 @@ class MoveService(metaclass=Singleton):
         'shortDesc': raw_move.get('shortDesc'),
       }
 
-  def get_move(self, name: str) -> Optional[MoveResponseEntry]:
-    return self._data.get(name)
+  def get_move(self, name: str) -> MoveResponseEntry:
+    if name not in self._data:
+      Logger().error(f'There is no "{name}" move in the current pokedex')
+      raise InvalidMove
+    return self._data[name]
   
 

@@ -1,15 +1,19 @@
+from typing import Dict
+
+from .exceptions.pokemon import InvalidPokemon
+
 from src.utils.logger import Logger
-from src.services.data.dto.pokemon import PokemonResponseEntry
-from typing import Dict, Optional
 from src.utils.singleton import Singleton
-import src.services.data.showdown
+
+from src.services.data.showdown import ShowdownAPI
+from src.services.data.dto.pokemon import PokemonResponseEntry
 
 class PokemonService(metaclass=Singleton):
   _data: Dict[str, PokemonResponseEntry] = {}
 
   def __init__(self):
     Logger().info(f'Initializing Pokemon repository')
-    response = src.services.data.showdown.ShowdownAPI().pokemon()
+    response = ShowdownAPI().pokemon()
 
     for raw_pokemon in response.values():
       pokemon_data: PokemonResponseEntry = {
@@ -38,7 +42,10 @@ class PokemonService(metaclass=Singleton):
       for cosmetic_form in pokemon_data['cosmeticFormes']:
         self._data[cosmetic_form] = pokemon_data
 
-  def get_pokemon(self, name: str) -> Optional[PokemonResponseEntry]:
-    return self._data.get(name)
+  def get_pokemon(self, name: str) -> PokemonResponseEntry:
+    if name not in self._data:
+      Logger().error(f'There is no "{name}" pokemon in the current pokedex')
+      raise InvalidPokemon
+    return self._data[name]
   
 

@@ -1,5 +1,5 @@
 class PokemonError(Exception):
   pass
 
-class InvalidMove(PokemonError):
+class InvalidPokemon(PokemonError):
   pass

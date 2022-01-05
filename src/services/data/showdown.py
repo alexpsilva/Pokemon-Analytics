@@ -2,16 +2,17 @@ from typing import Dict, Optional, Union
 from datetime import datetime
 import requests
 
+from .exceptions.showdown import InvalidBattleFormat, InvalidReplayID, InvalidStatDate, InvalidUsername
+
+from src.utils.logger import Logger
+from src.utils.parse_html import parse_list
+
 from .dto.pokemon import PokemonResponse
 from .dto.moves import MovesResponse
 from .dto.replay import ReplayResponse, ReplaySumaryResponse
 from .dto.ladder import LadderResponse
 
-from src.utils.logger import Logger
-from src.services.repositories.battle_log import BattleLogParser
-from src.utils.parse_html import parse_list
 from src.enums.battle_formats import BATTLE_FORMATS
-from .exceptions.showdown import *
 
 class ShowdownAPI:
   HOSTS = {
